@@ -39,7 +39,7 @@ class Config(object):
 	toke_ = '44ebc0f058981f85382595f9f15f967' + \
 			'0c7eaf2695de30dd752e8f33e9022baa0'
 
-	token = '575593eb7696aec7339224c0fac2313780d8645f68b77369dcb35f8bcb419a0b'
+	token = '79d86ffc2e88f9f9c51b9a76ce25b73ba843588b608558048d72700f107e405a'
 
 	body = {
 		'ssl': False,
@@ -400,7 +400,7 @@ class PyApi(object):
 
 
 	def get_equity_D1(self, field='', start='', end='', secID='',
-					  ticker='', one=20150513, output='df'):
+					  ticker='', one=20160701, output='df'):
 		"""
 		Get 1-day interday bar data of one security.
 
@@ -480,21 +480,21 @@ class PyApi(object):
 		except AssertionError: return 0
 
 	def get_block_D1(self, field='', start='', end='', secID='',
-					 ticker='', one=20150513):
+					 ticker='', one=20160701):
 		"""
 
 		"""
 		pass
 
 	def get_repo_D1(self, field='', start='', end='', secID='',
-					ticker='', one=20150513):
+					ticker='', one=20160701):
 		"""
 
 		"""
 		pass
 
 	def get_bond_D1(self, field='', start='', end='', secID='',
-					ticker='', one=20150513, output='df'):
+					ticker='', one=20160701, output='df'):
 		"""
 		Get 1-day interday bar data of one bond instrument.
 
@@ -552,7 +552,7 @@ class PyApi(object):
 		except AssertionError: return 0
 
 	def get_future_D1(self, field='', start='', end='', secID='',
-					ticker='', one=20150513, output='df'):
+					ticker='', one=20160701, output='df'):
 		"""
 		Get 1-day interday bar data of one future contract.
 
@@ -615,14 +615,14 @@ class PyApi(object):
 		except AssertionError: return 0
 
 	def get_future_main_D1(self, field='', start='', end='', mark='',
-						   obj='', main=1, one=20150513):
+						   obj='', main=1, one=20160701):
 		"""
 
 		"""
 		pass
 
 	def get_fund_D1(self, field='', start='', end='', secID='',
-					ticker='', one=20150513, output='df'):
+					ticker='', one=20160701, output='df'):
 		"""
 		Get 1-day interday bar data of one mutual fund.
 
@@ -681,7 +681,7 @@ class PyApi(object):
 		except AssertionError: return 0
 
 	def get_index_D1(self, field='', start='', end='', indexID='',
-					 ticker='', one=20150513, output='df'):
+					 ticker='', one=20160701, output='df'):
 		"""
 		Get 1-day interday bar data of one stock index.
 
@@ -738,7 +738,7 @@ class PyApi(object):
 		except AssertionError: return 0
 
 	def get_option_D1(self, field='', start='', end='', secID='',
-					  optID='' ,ticker='', one=20150513, output='df'):
+					  optID='' ,ticker='', one=20160701, output='df'):
 		"""
 		Get 1-day interday bar data of one option contact.
 

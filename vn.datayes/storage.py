@@ -53,7 +53,7 @@ class DBConfig(Config):
 	head = 'DB config'
 
 	client = pymongo.MongoClient()
-	body = {
+	"""body = {
 		'client': client,
 		'dbs': {
 			'EQU_M1': {
@@ -89,6 +89,18 @@ class DBConfig(Config):
 		},
 		'dbNames': ['EQU_M1', 'EQU_D1', 'FUT_D1', 
 					'OPT_D1', 'FUD_D1', 'IDX_D1']
+	}"""
+	body = {
+		'client': client,
+		'dbs': {
+			
+			'FUT_D1': {
+				'self': client['DATAYES_FUTURE_D1'],
+				'index': 'date',
+				'collNames': 'futTicker'
+			}
+		},
+		'dbNames': ['FUT_D1']
 	}
 
 	def __init__(self, head=None, token=None, body=None):
