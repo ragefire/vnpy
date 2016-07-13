@@ -7,7 +7,8 @@
 
 from ctaBase import *
 from ctaTemplate import CtaTemplate
-
+import numpy as np
+import talib as ta
 
 ########################################################################
 class TurtleDemo(CtaTemplate):
@@ -26,7 +27,20 @@ class TurtleDemo(CtaTemplate):
     
     # 策略变量
     bar = None
-    barMinute = EMPTY_STRING
+    
+    MyPostion = EMPTY_INT           #持仓方向，空仓0,多头1,空头-1
+    PreEnterPrice  = EMPTY_FLOAT    #上一次开仓价格
+
+    TotalEquity = EMPTY_INT         #当前总资金
+    TurtleUnits = EMPTY_INT         #每次开仓手数
+
+    EnterHigh = EMPTY_FLOAT         #多头突破开仓价格
+    EnterLow = EMPTY_FLOAT          #空头突破开仓价格
+
+    ExitHigh = EMPTY_FLOAT          #多头平仓价格
+    ExitLow = EMPTY_FLOAT           #空头平仓价格
+
+    MyATR    = EMPTY_FLOAT          #真实波动幅度ATR
     
     fastMa = []             # 快速EMA均线数组
     fastMa0 = EMPTY_FLOAT   # 当前最新的快速EMA
