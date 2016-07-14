@@ -9,6 +9,7 @@ from ctaBase import *
 from ctaTemplate import CtaTemplate
 import numpy as np
 import talib as ta
+import pandas as pd 
 
 ########################################################################
 class TurtleDemo(CtaTemplate):
@@ -27,7 +28,14 @@ class TurtleDemo(CtaTemplate):
     
     # 策略变量
     bar = None
-    
+    HistoryBar = pd.DataFrame({
+                                'open':EMPTY_FLOAT,
+                                'high':EMPTY_FLOAT,
+                                'low':EMPTY_FLOAT,
+                                'close':EMPTY_FLOAT,
+                                'volume':EMPTY_INT
+                                })
+
     MyPostion = EMPTY_INT           #持仓方向，空仓0,多头1,空头-1
     PreEnterPrice  = EMPTY_FLOAT    #上一次开仓价格
 
@@ -42,21 +50,17 @@ class TurtleDemo(CtaTemplate):
 
     MyATR    = EMPTY_FLOAT          #真实波动幅度ATR
     
-    fastMa = []             # 快速EMA均线数组
-    fastMa0 = EMPTY_FLOAT   # 当前最新的快速EMA
-    fastMa1 = EMPTY_FLOAT   # 上一根的快速EMA
 
-    slowMa = []             # 与上面相同
-    slowMa0 = EMPTY_FLOAT
-    slowMa1 = EMPTY_FLOAT
     
     # 参数列表，保存了参数的名称
     paramList = ['name',
                  'className',
                  'author',
                  'vtSymbol',
-                 'fastK',
-                 'slowK']    
+                 'breakLength',
+                 'exitLength',
+                 'atrLength',
+                 'riskRatio']    
     
     # 变量列表，保存了变量的名称
     varList = ['inited',
