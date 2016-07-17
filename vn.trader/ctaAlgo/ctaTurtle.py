@@ -47,7 +47,7 @@ class TurtleDemo(CtaTemplate):
                     'volume':np.array(VolHistory)
                 }
 
-    MyPostion = EMPTY_INT           #持仓方向，空仓0,多头1,空头-1
+    MyPosition = EMPTY_INT           #持仓方向，空仓0,多头1,空头-1
     PreEnterPrice  = EMPTY_FLOAT    #上一次开仓价格
     OverCounter    = EMPTY_INT         #已加仓次数
 
@@ -157,8 +157,8 @@ class TurtleDemo(CtaTemplate):
     """
         if barcounter>initDays:
 
-            if not MyPostion:        
-                if bar.high>EnterLong[-1]:
+            if not MyPosition:        
+                if bar.high>EnterLong[-2]:
 
                 
             else:
@@ -227,14 +227,17 @@ class TurtleDemo(CtaTemplate):
 
         #只有K线数达到初始数量以上之后，才开始策略计算
         if self.barcounter>self.initDays:
-            output=open('record.log','a')
-            output.write(u'date %s, 20high %s,20low %s,10high %s 10low %s' 
-                        %(bar.date,self.EnterLong[-2],self.EnterShort[-2],self.ExitShort[-2],self.ExitLong[-2] )+'\n')
-            output.close()            
+                        
             #更新N值
             self.N=self.MyATR[-2]
+            
+            output=open('record.log','a')
+            output.write(u'date %s, 20high %s,20low %s,10high %s 10low %s,Today high %s, low %s, position %s , N %s' 
+                        %(bar.date,self.EnterLong[-2],self.EnterShort[-2],self.ExitShort[-2],self.ExitLong[-2],
+                          bar.high,bar.low,self.MyPosition,self.N)+'\n')
+            output.close()
             #空仓时，突破入市价格新高、新低时开仓
-            if  self.MyPostion==0:        
+            if  self.MyPosition==0:        
                 #最新K线高点超过上一日多头突破价格时开仓
                 if bar.high>=self.EnterLong[-2]:
                     #如开盘价格跳空高于多头突破价格，则以开盘价格买入
@@ -244,19 +247,24 @@ class TurtleDemo(CtaTemplate):
                     #记录开仓价格
                     self.PreEnterPrice=max(bar.open,self.EnterLong[-2])
                     #dddddDD
-                    self.MyPostion=1
+                    self.MyPosition=1
                 #最新K线低点低于上一日空头突破价格
                 if bar.low<=self.EnterShort[-2]:
                     #如果开盘价格跳空低开，低于空头突破价格，则以开盘价格卖出
                     self.short(min(bar.open,self.EnterShort[-2]),1)
+                    
+                    output=open('record.log','a')
+                    output.write(u'date %s, short price %s' 
+                        %(bar.date,min(bar.open,self.EnterShort[-2]))+'\n')
+                    output.close()
                     #更新开仓次数计数器
                     self.OverCounter=self.OverCounter+1
                     #记录开仓价格
                     self.PreEnterPrice=min(bar.open,self.EnterShort[-2])
 
-                    self.MyPostion = -1
+                    self.MyPosition = -1
             #已持有多头仓位时 
-            elif self.MyPostion>0:
+            elif self.MyPosition>0:
                 #当最新K线高点高于上一买入价格以上0.5倍N值，并且加仓次数小于最大允许开仓次数时
                 while bar.high>self.PreEnterPrice+0.5*self.N and self.OverCounter<self.MaxOverWeight:
                     pass
@@ -267,12 +275,12 @@ class TurtleDemo(CtaTemplate):
                     #更新记录开仓价格
                     self.PreEnterPrice=max(bar.open,self.PreEnterPrice+0.5*self.N)
                 #如果最新K线低点，低于止损价格（止损价格为2N止损和10日低点中价格更高的那个）
-                if bar.low<=max(self.ExitLong[-2],self.PreEnterPrice-2*self.N):
+                if bar.low<=max(self.ExitLong[-2],self.PreEnterPrice-1*self.N):
                     #卖平所有持仓
-                    self.sell(min(bar.open,max(self.ExitLong[-2],self.PreEnterPrice-2*self.N)),1*self.OverCounter)
+                    self.sell(min(bar.open,max(self.ExitLong[-2],self.PreEnterPrice-1*self.N)),1*self.OverCounter)
                     #初始化持仓状态和开仓次数
                     self.OverCounter=0
-                    self.MyPostion=0
+                    self.MyPosition=0
             #已有空头仓位时
             else:
                 #当最新K线高点低于上一卖出价格以下0.5倍N值，并且加仓次数小于最大允许开仓次数时
@@ -290,7 +298,7 @@ class TurtleDemo(CtaTemplate):
                     self.cover(max(bar.open,min(self.ExitShort[-2],self.PreEnterPrice+2*self.N)),1*self.OverCounter)
                     #初始化持仓状态和开仓次数
                     self.OverCounter=0
-                    self.MyPostion=0
+                    self.MyPosition=0
              
         # 发出状态更新事件
         self.putEvent()

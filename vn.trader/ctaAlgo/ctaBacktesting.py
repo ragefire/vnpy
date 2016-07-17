@@ -166,9 +166,10 @@ class BacktestingEngine(object):
         """新的K线"""
         self.bar = bar
         self.dt = bar.datetime
+        self.strategy.onDayBar(bar)    # 推送K线到策略中
         self.crossLimitOrder()      # 先撮合限价单
         self.crossStopOrder()       # 再撮合停止单
-        self.strategy.onDayBar(bar)    # 推送K线到策略中
+
     
     #----------------------------------------------------------------------
     def newTick(self, tick):
@@ -312,10 +313,10 @@ class BacktestingEngine(object):
                 # 2. 假设在上一根K线结束(也是当前K线开始)的时刻，策略发出的委托为限价105
                 # 3. 则在实际中的成交价会是100而不是105，因为委托发出时市场的最优价格是100
                 if buyCross:
-                    trade.price = min(order.price, bestCrossPrice)
+                    trade.price = order.price
                     self.strategy.pos += order.totalVolume
                 else:
-                    trade.price = max(order.price, bestCrossPrice)
+                    trade.price = order.price
                     self.strategy.pos -= order.totalVolume
                 
                 trade.volume = order.totalVolume
