@@ -23,7 +23,7 @@ class TurtleDemo(CtaTemplate):
     riskRatio =2        #账户波动风险，海龟默认为账户值的2%
     MaxOverWeight = 4      #最大加仓次数
 
-    initDays = 30   # 初始化数据所用的天数
+    initDays = 20   # 初始化数据所用的天数
     
     # 策略变量
     bar = None
@@ -86,7 +86,7 @@ class TurtleDemo(CtaTemplate):
     #----------------------------------------------------------------------
     def __init__(self, ctaEngine, setting):
         """Constructor"""
-        super(DoubleEmaDemo, self).__init__(ctaEngine, setting)
+        super(TurtleDemo, self).__init__(ctaEngine, setting)
         
     #----------------------------------------------------------------------
     def onInit(self):
@@ -153,7 +153,8 @@ class TurtleDemo(CtaTemplate):
     def onBar(self, bar):
         """收到Bar推送（必须由用户继承实现）"""
                
-
+        pass
+    """
         if barcounter>initDays:
 
             if not MyPostion:        
@@ -189,7 +190,7 @@ class TurtleDemo(CtaTemplate):
                     self.short(bar.close, 1)
                     
         # 发出状态更新事件
-        self.putEvent()
+        self.putEvent()"""
 
     #----------------------------------------------------------------------
     def onDayBar(self, bar):
@@ -198,7 +199,7 @@ class TurtleDemo(CtaTemplate):
         # 只有在收到日线BAR时计算所有指标值
         if bar.date != self.barDate:
             #K线计数
-            self.barcounter=barcounter+1
+            self.barcounter=self.barcounter+1
             #更新K线历史数据
             self.OpenHistory.append(bar.open)
             self.CloseHistory.append(bar.close)
@@ -206,28 +207,34 @@ class TurtleDemo(CtaTemplate):
             self.LowHistory.append(bar.low)
             self.VolHistory.append(bar.volume)
             self.HistoryBar = {
-                                'open':np.array(self.OpenHistory),
-                                'high':np.array(self.HighHistory),
-                                'low':np.array(self.LowHistory),
-                                'close':np.array(self.CloseHistory),
+                                'open':np.array(self.OpenHistory,dtype=np.float64),
+                                'high':np.array(self.HighHistory,dtype=np.float64),
+                                'low':np.array(self.LowHistory,dtype=np.float64),
+                                'close':np.array(self.CloseHistory,dtype=np.float64),
                                 'volume':np.array(self.VolHistory)
                                 }
             #更新ATR            
-            self.MyATR=ta.ATR(self.HighHistory,self.LowHistory,self.CloseHistory,timeperiod=self.atrLength)
-            #更新N值
-            self.N=self.MyATR[-2]
+            self.MyATR=ta.ATR(self.HistoryBar['high'],self.HistoryBar['low'],
+                              self.HistoryBar['close'],timeperiod=self.atrLength)
+            
             #更新入场开仓价格
-            self.EnterLong=ta.MAX(self.HighHistory,timeperiod=self.breakLength)
-            self.EnterShort=ta.MIN(self.LowHistory,timeperiod=self.breakLength)
+            self.EnterLong=ta.MAX(self.HistoryBar['high'],timeperiod=self.breakLength)
+            self.EnterShort=ta.MIN(self.HistoryBar['low'],timeperiod=self.breakLength)
             #更新离场平仓价格
-            self.ExitHigh=ta.MAX(self.HighHistory,timeperiod=self.exitLength)
-            self.ExitLow=ta.MIN(self.LowHistory,timeperiod=self.exitLength)
+            self.ExitLong=ta.MIN(self.HistoryBar['low'],timeperiod=self.exitLength)
+            self.ExitShort=ta.MAX(self.HistoryBar['high'],timeperiod=self.exitLength)
             self.barDate = bar.date
 
         #只有K线数达到初始数量以上之后，才开始策略计算
         if self.barcounter>self.initDays:
+            output=open('record.log','a')
+            output.write(u'date %s, 20high %s,20low %s,10high %s 10low %s' 
+                        %(bar.date,self.EnterLong[-2],self.EnterShort[-2],self.ExitShort[-2],self.ExitLong[-2] )+'\n')
+            output.close()            
+            #更新N值
+            self.N=self.MyATR[-2]
             #空仓时，突破入市价格新高、新低时开仓
-            if  self.MyPostion=0:        
+            if  self.MyPostion==0:        
                 #最新K线高点超过上一日多头突破价格时开仓
                 if bar.high>=self.EnterLong[-2]:
                     #如开盘价格跳空高于多头突破价格，则以开盘价格买入
@@ -236,6 +243,8 @@ class TurtleDemo(CtaTemplate):
                     self.OverCounter=self.OverCounter+1
                     #记录开仓价格
                     self.PreEnterPrice=max(bar.open,self.EnterLong[-2])
+                    #dddddDD
+                    self.MyPostion=1
                 #最新K线低点低于上一日空头突破价格
                 if bar.low<=self.EnterShort[-2]:
                     #如果开盘价格跳空低开，低于空头突破价格，则以开盘价格卖出
@@ -243,8 +252,9 @@ class TurtleDemo(CtaTemplate):
                     #更新开仓次数计数器
                     self.OverCounter=self.OverCounter+1
                     #记录开仓价格
-                    self.PreEnterPrice=min(bar.open,self.EnterShort0[-2])
+                    self.PreEnterPrice=min(bar.open,self.EnterShort[-2])
 
+                    self.MyPostion = -1
             #已持有多头仓位时 
             elif self.MyPostion>0:
                 #当最新K线高点高于上一买入价格以上0.5倍N值，并且加仓次数小于最大允许开仓次数时
@@ -257,13 +267,13 @@ class TurtleDemo(CtaTemplate):
                     #更新记录开仓价格
                     self.PreEnterPrice=max(bar.open,self.PreEnterPrice+0.5*self.N)
                 #如果最新K线低点，低于止损价格（止损价格为2N止损和10日低点中价格更高的那个）
-                if bar.low<=max(self.ExitLong[-2],self.PreEnterPrice-2*self.N)
+                if bar.low<=max(self.ExitLong[-2],self.PreEnterPrice-2*self.N):
                     #卖平所有持仓
                     self.sell(min(bar.open,max(self.ExitLong[-2],self.PreEnterPrice-2*self.N)),1*self.OverCounter)
                     #初始化持仓状态和开仓次数
                     self.OverCounter=0
                     self.MyPostion=0
-            #已次有空头仓位时
+            #已有空头仓位时
             else:
                 #当最新K线高点低于上一卖出价格以下0.5倍N值，并且加仓次数小于最大允许开仓次数时
                 while bar.low<self.PreEnterPrice-0.5*self.N and self.OverCounter<self.MaxOverWeight:
@@ -275,7 +285,7 @@ class TurtleDemo(CtaTemplate):
                     #更新记录开仓价格
                     self.PreEnterPrice=min(bar.open,self.PreEnterPrice-0.5*self.N)
                 #如果最新K线高点，高于止损价格（止损价格为2N止损和10日高点中价格更低的那个）    
-                if bar.high>=min(self.ExitShort[-2],self.PreEnterPrice+2*self.N)
+                if bar.high>=min(self.ExitShort[-2],self.PreEnterPrice+2*self.N):
                     #买平所有持仓
                     self.cover(max(bar.open,min(self.ExitShort[-2],self.PreEnterPrice+2*self.N)),1*self.OverCounter)
                     #初始化持仓状态和开仓次数

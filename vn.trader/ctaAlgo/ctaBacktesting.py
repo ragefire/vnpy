@@ -168,7 +168,7 @@ class BacktestingEngine(object):
         self.dt = bar.datetime
         self.crossLimitOrder()      # 先撮合限价单
         self.crossStopOrder()       # 再撮合停止单
-        self.strategy.onBar(bar)    # 推送K线到策略中
+        self.strategy.onDayBar(bar)    # 推送K线到策略中
     
     #----------------------------------------------------------------------
     def newTick(self, tick):
@@ -220,7 +220,7 @@ class BacktestingEngine(object):
         # 保存到限价单字典中
         self.workingLimitOrderDict[orderID] = order
         self.limitOrderDict[orderID] = order
-        
+
         return orderID
     
     #----------------------------------------------------------------------
@@ -324,7 +324,10 @@ class BacktestingEngine(object):
                 self.strategy.onTrade(trade)
                 
                 self.tradeDict[tradeID] = trade
-                
+                output=open('trade.log','a')
+                output.write(u'策略%s发送委托，%s,%s，%s，%s@%s' 
+                         %('Turtle',trade.dt, trade.vtSymbol, trade.direction, trade.volume, trade.price)+'\n')
+                output.close
                 # 推送委托数据
                 order.tradedVolume = order.totalVolume
                 order.status = STATUS_ALLTRADED
@@ -548,7 +551,7 @@ if __name__ == '__main__':
     # 以下内容是一段回测脚本的演示，用户可以根据自己的需求修改
     # 建议使用ipython notebook或者spyder来做回测
     # 同样可以在命令模式下进行回测（一行一行输入运行）
-    from ctaDemo import *
+    from ctaTurtle import *
     
     # 创建回测引擎
     engine = BacktestingEngine()
@@ -560,15 +563,18 @@ if __name__ == '__main__':
     engine.setStartDate('20110101')
     
     # 载入历史数据到引擎中
-    engine.loadHistoryData(MINUTE_DB_NAME, 'IF0000')
+    engine.loadHistoryData(DAILY_DB_NAME, 'IF0000')
     
     # 设置产品相关参数
     engine.setSlippage(0.2)     # 股指1跳
     engine.setRate(0.3/10000)   # 万0.3
     engine.setSize(300)         # 股指合约大小    
+    #engine.setSlippage(1)     # 股指1跳
+    #engine.setRate(1/10000)   # 万0.3
+    #engine.setSize(10)         # 股指合约大小    
     
     # 在引擎中创建策略对象
-    engine.initStrategy(DoubleEmaDemo, {})
+    engine.initStrategy(TurtleDemo, {})
     
     # 开始跑回测
     engine.runBacktesting()
