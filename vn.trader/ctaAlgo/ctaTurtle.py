@@ -152,7 +152,7 @@ class TurtleDemo(CtaTemplate):
             bar.close = tick.lastPrice
         
         if self.bar and self.inited :
-            self.doStrategy(self.bar)
+            self.doStrategy(bar)
     #----------------------------------------------------------------------
     def onBar(self, bar):
         """收到Bar推送（必须由用户继承实现）"""

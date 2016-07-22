@@ -412,8 +412,8 @@ class CtaEngine(object):
             strategy = self.strategyDict[name]
             
             if not strategy.inited:
-                strategy.inited = True
                 strategy.onInit()
+                strategy.inited = True
             else:
                 self.writeCtaLog(u'请勿重复初始化策略实例：%s' %name)
         else:
@@ -474,8 +474,18 @@ class CtaEngine(object):
         with open(self.settingFileName) as f:
             l = json.load(f)
             
-            for setting in l:
-                self.loadStrategy(setting)
+            for setting_list in l:
+                for vtSymbol in setting_list['vtSymbol']:
+                    setting['vtSymbol']=vtSymbol
+                    for key in setting_list:
+                    if key=='vtSymbol':
+                        pass
+                    elif key=='name':
+                        setting[key]=setting_list[key]+'.'+vtSymbol
+                    else:
+                        setting[key]=setting_list[key]
+
+                    self.loadStrategy(setting)
     
     #----------------------------------------------------------------------
     def getStrategyVar(self, name):
