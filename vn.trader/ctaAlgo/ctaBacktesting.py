@@ -278,6 +278,8 @@ class BacktestingEngine(object):
     #----------------------------------------------------------------------
     def crossLimitOrder(self):
         """基于最新数据撮合限价单"""
+        if not self.tradeCount:
+            output=open('trade.log','w')
         # 先确定会撮合成交的价格
         if self.mode == self.BAR_MODE:
             buyCrossPrice = self.bar.low    # 若买入方向限价单价格高于该价格，则会成交
@@ -325,6 +327,7 @@ class BacktestingEngine(object):
                 self.strategy.onTrade(trade)
                 
                 self.tradeDict[tradeID] = trade
+                
                 output=open('trade.log','a')
                 output.write(u'策略%s发送委托，%s,%s，%s，%s@%s' 
                          %('Turtle',trade.dt, trade.vtSymbol, trade.direction, trade.volume, trade.price)+'\n')
@@ -443,13 +446,15 @@ class BacktestingEngine(object):
         self.output(u'显示回测结果')
         
         # 首先基于回测后的成交记录，计算每笔交易的盈亏
-        pnlDict = OrderedDict()     # 每笔盈亏的记录 
+        pnlDict = OrderedDict()     # 平仓盈亏的记录 
+        TotolTradeDict = OrderedDict()     # 每笔盈亏的记录 
         longTrade = []              # 未平仓的多头交易
         shortTrade = []             # 未平仓的空头交易
+    
         
         # 计算滑点，一个来回包括两次
         totalSlippage = self.slippage * 2 
-        
+        output=open('result.log','w')
         for trade in self.tradeDict.values():
             # 多头交易
             if trade.direction == DIRECTION_LONG:
@@ -458,13 +463,23 @@ class BacktestingEngine(object):
                     longTrade.append(trade)
                 # 当前多头交易为平空
                 else:
-                    entryTrade = shortTrade.pop(0)
-                    # 计算比例佣金
-                    commission = (trade.price+entryTrade.price) * self.rate
-                    # 计算盈亏
-                    pnl = ((trade.price - entryTrade.price)*(-1) - totalSlippage - commission) \
-                        * trade.volume * self.size
-                    pnlDict[trade.dt] = pnl
+                    while shortTrade :
+                        entryTrade = shortTrade.pop(0)
+                        # 计算比例佣金
+                        commission = (trade.price+entryTrade.price)/2 * self.rate
+                        # 计算盈亏
+                        pnl = ((trade.price - entryTrade.price)*(-1) - totalSlippage - commission) \
+                            * entryTrade.volume * self.size
+                        if not pnlDict.has_key(trade.dt):
+                            pnlDict[trade.dt] = pnl
+                        else:
+                            pnlDict[trade.dt] = pnlDict[trade.dt]+pnl
+                        
+                        TotolTradeDict[entryTrade.tradeID]=pnl
+                        
+                        output.write(u'空,%s, %s, %s, %s' 
+                        %(entryTrade.dt,entryTrade.price,trade.dt,trade.price)+'\n')
+                        
             # 空头交易        
             else:
                 # 如果尚无多头交易
@@ -472,14 +487,23 @@ class BacktestingEngine(object):
                     shortTrade.append(trade)
                 # 当前空头交易为平多
                 else:
-                    entryTrade = longTrade.pop(0)
-                    # 计算比例佣金
-                    commission = (trade.price+entryTrade.price) * self.rate    
-                    # 计算盈亏
-                    pnl = ((trade.price - entryTrade.price) - totalSlippage - commission) \
-                        * trade.volume * self.size
-                    pnlDict[trade.dt] = pnl
-        
+                    while longTrade:
+                        entryTrade = longTrade.pop(0)
+                        # 计算比例佣金
+                        commission = (trade.price+entryTrade.price)/2 * self.rate    
+                        # 计算盈亏
+                        pnl =((trade.price - entryTrade.price) - totalSlippage - commission) \
+                            * entryTrade.volume * self.size
+                        if not pnlDict.has_key(trade.dt):
+                            pnlDict[trade.dt] = pnl
+                        else:
+                            pnlDict[trade.dt] = pnlDict[trade.dt]+pnl
+                        
+                        TotolTradeDict[entryTrade.tradeID]=pnl
+                        output.write(u'多,%s, %s, %s, %s' 
+                        %(entryTrade.dt,entryTrade.price,trade.dt,trade.price)+'\n')
+                        
+        output.close()
         # 然后基于每笔交易的结果，我们可以计算具体的盈亏曲线和最大回撤等
         timeList = pnlDict.keys()
         pnlList = pnlDict.values()
@@ -505,7 +529,7 @@ class BacktestingEngine(object):
         self.output('-' * 50)
         self.output(u'第一笔交易时间：%s' % timeList[0])
         self.output(u'最后一笔交易时间：%s' % timeList[-1])
-        self.output(u'总交易次数：%s' % len(pnlList))
+        self.output(u'总交易次数：%s' % len(TotolTradeDict))
         self.output(u'总盈亏：%s' % capitalList[-1])
         self.output(u'最大回撤: %s' % min(drawdownList))        
             

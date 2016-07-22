@@ -19,6 +19,7 @@ class CtaTemplate(object):
     # MongoDB数据库的名称，K线数据库默认为1分钟
     tickDbName = TICK_DB_NAME
     barDbName = MINUTE_DB_NAME
+    dayBarDbName = DAILY_DB_NAME
     
     # 策略的基本参数
     name = EMPTY_UNICODE           # 策略实例名称
@@ -149,7 +150,10 @@ class CtaTemplate(object):
     def loadBar(self, days):
         """读取bar数据"""
         return self.ctaEngine.loadBar(self.barDbName, self.vtSymbol, days)
-    
+    #----------------------------------------------------------------------
+    def loadDayBar(self, days):
+        """读取日bar数据"""
+        return self.ctaEngine.loadBar(self.dayBarDbName, self.vtSymbol, days)
     #----------------------------------------------------------------------
     def writeCtaLog(self, content):
         """记录CTA日志"""

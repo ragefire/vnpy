@@ -9,9 +9,8 @@
 '''
 
 from ctaTemplate import DataRecorder
-from ctaDemo import DoubleEmaDemo
 from ctaTurtle import TurtleDemo
+
 STRATEGY_CLASS = {}
 STRATEGY_CLASS['DataRecorder'] = DataRecorder
-STRATEGY_CLASS['DoubleEmaDemo'] = DoubleEmaDemo
 STRATEGY_CLASS['TurtleDemo'] = TurtleDemo

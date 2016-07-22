@@ -5,6 +5,11 @@
 1. 从通联数据下载历史行情的引擎
 2. 用来把MultiCharts导出的历史数据载入到MongoDB中用的函数
 """
+import sys
+
+reload(sys)
+
+sys.setdefaultencoding('utf8')
 
 from datetime import datetime, timedelta
 import pymongo
