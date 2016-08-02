@@ -17,6 +17,12 @@ SETTING_DB_NAME = 'VnTrader_Setting_Db'
 TICK_DB_NAME = 'VnTrader_Tick_Db'
 DAILY_DB_NAME = 'VnTrader_Daily_Db'
 MINUTE_DB_NAME = 'VnTrader_1Min_Db'
+#交易时间
+########################################################################
+CTP_TRADE_DAY_BEGIN=845
+CTP_TRADE_DAY_END=1520
+CTP_TRADE_NIGHT_BEGIN=2045
+CTP_TRADE_NIGHT_END=300   
 
 
 # CTA引擎中涉及的数据类定义
@@ -63,9 +69,13 @@ class DrTickData(object):
         self.volume = EMPTY_INT                 # 最新成交量
         self.openInterest = EMPTY_INT           # 持仓量
         
+        # 常规行情
+        self.openPrice = EMPTY_FLOAT            # 今日开盘价
+        self.highPrice = EMPTY_FLOAT            # 今日最高价
+        self.lowPrice = EMPTY_FLOAT             # 今日最低价
         self.upperLimit = EMPTY_FLOAT           # 涨停价
         self.lowerLimit = EMPTY_FLOAT           # 跌停价
-        
+
         # tick的时间
         self.date = EMPTY_STRING            # 日期
         self.time = EMPTY_STRING            # 时间

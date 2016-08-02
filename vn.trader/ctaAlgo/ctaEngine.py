@@ -235,24 +235,29 @@ class CtaEngine(object):
     def procecssTickEvent(self, event):
         """处理行情推送"""
         tick = event.dict_['data']
-        # 收到tick行情后，先处理本地停止单（检查是否要立即发出）
-        self.processStopOrder(tick)
-        
-        # 推送tick到对应的策略实例进行处理
-        if tick.vtSymbol in self.tickStrategyDict:
-            # 将vtTickData数据转化为ctaTickData
-            ctaTick = CtaTickData()
-            d = ctaTick.__dict__
-            for key in d.keys():
-                if key != 'datetime':
-                    d[key] = tick.__getattribute__(key)
-            # 添加datetime字段
-            ctaTick.datetime = datetime.strptime(' '.join([tick.date, tick.time]), '%Y%m%d %H:%M:%S.%f')
-            
-            # 逐个推送到策略实例中
-            l = self.tickStrategyDict[tick.vtSymbol]
-            for strategy in l:
-                strategy.onTick(ctaTick)
+        #检查tick是否在交易时间内
+        min1=int(tick.time[:2]+tick.time[3:5])
+        if (min1>CTP_TRADE_DAY_BEGIN and min1<CTP_TRADE_DAY_END) or min1>CTP_TRADE_NIGHT_BEGIN or min1<CTP_TRADE_NIGHT_END :
+            #忽略交易量为0的无效数据
+            if tick.volume>0 and tick.date!='' and tick.date!=None:
+                # 收到tick行情后，先处理本地停止单（检查是否要立即发出）
+                self.processStopOrder(tick)
+                
+                # 推送tick到对应的策略实例进行处理
+                if tick.vtSymbol in self.tickStrategyDict:
+                    # 将vtTickData数据转化为ctaTickData
+                    ctaTick = CtaTickData()
+                    d = ctaTick.__dict__
+                    for key in d.keys():
+                        if key != 'datetime':
+                            d[key] = tick.__getattribute__(key)
+                    # 添加datetime字段
+                    ctaTick.datetime = datetime.strptime(' '.join([tick.date, tick.time]), '%Y%m%d %H:%M:%S.%f')
+                    
+                    # 逐个推送到策略实例中
+                    l = self.tickStrategyDict[tick.vtSymbol]
+                    for strategy in l:
+                        strategy.onTick(ctaTick)
     
     #----------------------------------------------------------------------
     def processOrderEvent(self, event):
@@ -476,14 +481,15 @@ class CtaEngine(object):
             
             for setting_list in l:
                 for vtSymbol in setting_list['vtSymbol']:
+                    setting={}
                     setting['vtSymbol']=vtSymbol
                     for key in setting_list:
-                    if key=='vtSymbol':
-                        pass
-                    elif key=='name':
-                        setting[key]=setting_list[key]+'.'+vtSymbol
-                    else:
-                        setting[key]=setting_list[key]
+                        if key=='vtSymbol':
+                            pass
+                        elif key=='name':
+                            setting[key]=setting_list[key]+'.'+vtSymbol
+                        else:
+                            setting[key]=setting_list[key]
 
                     self.loadStrategy(setting)
     

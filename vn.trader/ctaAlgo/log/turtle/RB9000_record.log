@@ -1,0 +1,218 @@
+date 20110201,  buy RB9000 at price 5063.0
+date 20110218, PreEnterPrice 5063.0, sell RB9000 at price 4968.0
+date 20110223, short RB9000 at price 4931.0
+date 20110224, PreEnterPrice 4931.0, short RB9000 at price 4905.5
+date 20110224, PreEnterPrice 4905.5, short RB9000 at price 4880.0
+date 20110301, PreEnterPrice 4880.0, short RB9000 at price 4854.5
+date 20110406, PreEnterPrice 4854.5, cover RB9000 at price 4832.0
+date 20110406,  buy RB9000 at price 4848.0
+date 20110407, PreEnterPrice 4848.0, buy RB9000 at price 4881.5
+date 20110411, PreEnterPrice 4881.5, buy RB9000 at price 4922.0
+date 20110419, PreEnterPrice 4922.0, sell RB9000 at price 4792.0
+date 20110503,  buy RB9000 at price 4936.0
+date 20110506, PreEnterPrice 4936.0, sell RB9000 at price 4835.0
+date 20110616, short RB9000 at price 4775.0
+date 20110617, PreEnterPrice 4775.0, short RB9000 at price 4755.5
+date 20110617, PreEnterPrice 4755.5, short RB9000 at price 4737.5
+date 20110620, PreEnterPrice 4737.5, short RB9000 at price 4718.0
+date 20110704, PreEnterPrice 4718.0, cover RB9000 at price 4754.0
+date 20110711,  buy RB9000 at price 4840.0
+date 20110712, PreEnterPrice 4840.0, buy RB9000 at price 4858.0
+date 20110712, PreEnterPrice 4858.0, buy RB9000 at price 4876.0
+date 20110713, PreEnterPrice 4876.0, buy RB9000 at price 4894.0
+date 20110805, PreEnterPrice 4894.0, sell RB9000 at price 4869.0
+date 20110809, short RB9000 at price 4763.0
+date 20110810, PreEnterPrice 4763.0, cover RB9000 at price 4837.0
+date 20110913, short RB9000 at price 4780.0
+date 20110914, PreEnterPrice 4780.0, short RB9000 at price 4760.0
+date 20110916, PreEnterPrice 4760.0, short RB9000 at price 4740.0
+date 20110919, PreEnterPrice 4740.0, short RB9000 at price 4714.0
+date 20111109, PreEnterPrice 4714.0, cover RB9000 at price 4172.0
+date 20111201,  buy RB9000 at price 4239.0
+date 20111215, PreEnterPrice 4239.0, sell RB9000 at price 4112.0
+date 20120117,  buy RB9000 at price 4248.0
+date 20120118, PreEnterPrice 4248.0, buy RB9000 at price 4294.0
+date 20120118, PreEnterPrice 4294.0, buy RB9000 at price 4311.5
+date 20120120, PreEnterPrice 4311.5, buy RB9000 at price 4329.0
+date 20120213, PreEnterPrice 4329.0, sell RB9000 at price 4263.0
+date 20120215, short RB9000 at price 4204.0
+date 20120216, PreEnterPrice 4204.0, short RB9000 at price 4182.0
+date 20120216, PreEnterPrice 4182.0, short RB9000 at price 4162.5
+date 20120222, PreEnterPrice 4162.5, cover RB9000 at price 4240.5
+date 20120309,  buy RB9000 at price 4315.0
+date 20120313, PreEnterPrice 4315.0, buy RB9000 at price 4333.5
+date 20120321, PreEnterPrice 4333.5, buy RB9000 at price 4350.0
+date 20120327, PreEnterPrice 4350.0, buy RB9000 at price 4365.0
+date 20120405, PreEnterPrice 4365.0, sell RB9000 at price 4306.0
+date 20120406,  buy RB9000 at price 4367.0
+date 20120409, PreEnterPrice 4367.0, buy RB9000 at price 4382.0
+date 20120409, PreEnterPrice 4382.0, buy RB9000 at price 4397.0
+date 20120416, PreEnterPrice 4397.0, sell RB9000 at price 4337.0
+date 20120423, short RB9000 at price 4291.0
+date 20120424, PreEnterPrice 4291.0, short RB9000 at price 4277.0
+date 20120424, PreEnterPrice 4277.0, short RB9000 at price 4263.0
+date 20120502, PreEnterPrice 4263.0, short RB9000 at price 4249.0
+date 20120531, PreEnterPrice 4249.0, cover RB9000 at price 4118.0
+date 20120620,  buy RB9000 at price 4138.0
+date 20120626, PreEnterPrice 4138.0, sell RB9000 at price 4079.0
+date 20120702, short RB9000 at price 4020.0
+date 20120704, PreEnterPrice 4020.0, cover RB9000 at price 4090.0
+date 20120710, short RB9000 at price 4018.0
+date 20120711, PreEnterPrice 4018.0, short RB9000 at price 3957.0
+date 20120712, PreEnterPrice 3957.0, short RB9000 at price 3938.5
+date 20120716, PreEnterPrice 3938.5, short RB9000 at price 3920.5
+date 20120912, PreEnterPrice 3920.5, cover RB9000 at price 3513.0
+date 20120919,  buy RB9000 at price 3627.0
+date 20120920, PreEnterPrice 3627.0, sell RB9000 at price 3499.0
+date 20120927,  buy RB9000 at price 3644.0
+date 20121009, PreEnterPrice 3644.0, buy RB9000 at price 3683.0
+date 20121023, PreEnterPrice 3683.0, buy RB9000 at price 3719.5
+date 20121119, PreEnterPrice 3719.5, sell RB9000 at price 3602.0
+date 20121119, short RB9000 at price 3592.0
+date 20121120, PreEnterPrice 3592.0, short RB9000 at price 3566.0
+date 20121127, PreEnterPrice 3566.0, short RB9000 at price 3542.0
+date 20121129, PreEnterPrice 3542.0, short RB9000 at price 3521.5
+date 20121205, PreEnterPrice 3521.5, cover RB9000 at price 3589.0
+date 20121210,  buy RB9000 at price 3686.0
+date 20121214, PreEnterPrice 3686.0, buy RB9000 at price 3707.0
+date 20121214, PreEnterPrice 3707.0, buy RB9000 at price 3728.0
+date 20121214, PreEnterPrice 3728.0, buy RB9000 at price 3749.0
+date 20130221, PreEnterPrice 3749.0, sell RB9000 at price 4108.0
+date 20130226, short RB9000 at price 3947.0
+date 20130304, PreEnterPrice 3947.0, short RB9000 at price 3916.0
+date 20130304, PreEnterPrice 3916.0, short RB9000 at price 3885.5
+date 20130313, PreEnterPrice 3885.5, short RB9000 at price 3855.0
+date 20130326, PreEnterPrice 3855.0, cover RB9000 at price 3926.0
+date 20130401, short RB9000 at price 3741.0
+date 20130402, PreEnterPrice 3741.0, short RB9000 at price 3707.0
+date 20130409, PreEnterPrice 3707.0, cover RB9000 at price 3849.0
+date 20130416, short RB9000 at price 3679.0
+date 20130418, PreEnterPrice 3679.0, short RB9000 at price 3621.0
+date 20130423, PreEnterPrice 3621.0, short RB9000 at price 3586.0
+date 20130502, PreEnterPrice 3586.0, short RB9000 at price 3550.0
+date 20130513, PreEnterPrice 3550.0, cover RB9000 at price 3683.0
+date 20130516, short RB9000 at price 3531.0
+date 20130528, PreEnterPrice 3531.0, short RB9000 at price 3496.0
+date 20130529, PreEnterPrice 3496.0, short RB9000 at price 3461.5
+date 20130530, PreEnterPrice 3461.5, short RB9000 at price 3426.0
+date 20130617, PreEnterPrice 3426.0, cover RB9000 at price 3504.0
+date 20130703,  buy RB9000 at price 3560.0
+date 20130704, PreEnterPrice 3560.0, buy RB9000 at price 3596.0
+date 20130710, PreEnterPrice 3596.0, buy RB9000 at price 3621.5
+date 20130711, PreEnterPrice 3621.5, buy RB9000 at price 3648.0
+date 20130729, PreEnterPrice 3648.0, sell RB9000 at price 3635.0
+date 20130807,  buy RB9000 at price 3689.0
+date 20130808, PreEnterPrice 3689.0, buy RB9000 at price 3713.0
+date 20130808, PreEnterPrice 3713.0, buy RB9000 at price 3729.5
+date 20130809, PreEnterPrice 3729.5, buy RB9000 at price 3746.0
+date 20130829, PreEnterPrice 3746.0, sell RB9000 at price 3753.0
+date 20130906, short RB9000 at price 3710.0
+date 20130913, PreEnterPrice 3710.0, short RB9000 at price 3691.5
+date 20130913, PreEnterPrice 3691.5, short RB9000 at price 3673.0
+date 20130916, PreEnterPrice 3673.0, short RB9000 at price 3654.5
+date 20131101, PreEnterPrice 3654.5, cover RB9000 at price 3612.0
+date 20131107,  buy RB9000 at price 3656.0
+date 20131115, PreEnterPrice 3656.0, sell RB9000 at price 3590.0
+date 20131126,  buy RB9000 at price 3663.0
+date 20131202, PreEnterPrice 3663.0, buy RB9000 at price 3678.0
+date 20131203, PreEnterPrice 3678.0, buy RB9000 at price 3693.0
+date 20131204, PreEnterPrice 3693.0, buy RB9000 at price 3708.0
+date 20131218, PreEnterPrice 3708.0, sell RB9000 at price 3667.0
+date 20131225, short RB9000 at price 3613.0
+date 20131226, PreEnterPrice 3613.0, short RB9000 at price 3599.0
+date 20131231, PreEnterPrice 3599.0, short RB9000 at price 3585.0
+date 20140103, PreEnterPrice 3585.0, short RB9000 at price 3570.5
+date 20140218, PreEnterPrice 3570.5, cover RB9000 at price 3498.0
+date 20140224, short RB9000 at price 3412.0
+date 20140225, PreEnterPrice 3412.0, short RB9000 at price 3373.0
+date 20140225, PreEnterPrice 3373.0, short RB9000 at price 3355.0
+date 20140307, PreEnterPrice 3355.0, short RB9000 at price 3337.0
+date 20140325, PreEnterPrice 3337.0, cover RB9000 at price 3272.0
+date 20140404,  buy RB9000 at price 3358.0
+date 20140408, PreEnterPrice 3358.0, buy RB9000 at price 3385.0
+date 20140408, PreEnterPrice 3385.0, buy RB9000 at price 3409.0
+date 20140418, PreEnterPrice 3409.0, sell RB9000 at price 3313.0
+date 20140505, short RB9000 at price 3214.0
+date 20140507, PreEnterPrice 3214.0, short RB9000 at price 3194.0
+date 20140508, PreEnterPrice 3194.0, short RB9000 at price 3174.0
+date 20140509, PreEnterPrice 3174.0, short RB9000 at price 3155.0
+date 20140625, PreEnterPrice 3155.0, cover RB9000 at price 3080.0
+date 20140710,  buy RB9000 at price 3123.0
+date 20140714, PreEnterPrice 3123.0, buy RB9000 at price 3137.5
+date 20140718, PreEnterPrice 3137.5, sell RB9000 at price 3079.5
+date 20140721, short RB9000 at price 3049.0
+date 20140729, PreEnterPrice 3049.0, cover RB9000 at price 3107.0
+date 20140814, short RB9000 at price 3037.0
+date 20140815, PreEnterPrice 3037.0, short RB9000 at price 3023.0
+date 20140819, PreEnterPrice 3023.0, short RB9000 at price 3009.5
+date 20140820, PreEnterPrice 3009.5, short RB9000 at price 2996.0
+date 20141014, PreEnterPrice 2996.0, cover RB9000 at price 2668.0
+date 20141107, short RB9000 at price 2533.0
+date 20141118, PreEnterPrice 2533.0, short RB9000 at price 2509.5
+date 20141118, PreEnterPrice 2509.5, short RB9000 at price 2489.5
+date 20141118, PreEnterPrice 2489.5, short RB9000 at price 2469.5
+date 20141128, PreEnterPrice 2469.5, cover RB9000 at price 2549.5
+date 20141211,  buy RB9000 at price 2595.0
+date 20141222, PreEnterPrice 2595.0, sell RB9000 at price 2511.0
+date 20141230,  buy RB9000 at price 2605.0
+date 20141231, PreEnterPrice 2605.0, buy RB9000 at price 2627.0
+date 20150112, PreEnterPrice 2627.0, sell RB9000 at price 2539.0
+date 20150114, short RB9000 at price 2470.0
+date 20150126, PreEnterPrice 2470.0, short RB9000 at price 2447.5
+date 20150202, PreEnterPrice 2447.5, cover RB9000 at price 2528.0
+date 20150213,  buy RB9000 at price 2533.0
+date 20150216, PreEnterPrice 2533.0, buy RB9000 at price 2550.5
+date 20150302, PreEnterPrice 2550.5, sell RB9000 at price 2489.0
+date 20150306, short RB9000 at price 2466.0
+date 20150309, PreEnterPrice 2466.0, short RB9000 at price 2449.0
+date 20150309, PreEnterPrice 2449.0, short RB9000 at price 2433.5
+date 20150310, PreEnterPrice 2433.5, short RB9000 at price 2418.0
+date 20150316, PreEnterPrice 2418.0, cover RB9000 at price 2480.0
+date 20150324,  buy RB9000 at price 2550.0
+date 20150326, PreEnterPrice 2550.0, sell RB9000 at price 2484.0
+date 20150327, short RB9000 at price 2403.0
+date 20150330, PreEnterPrice 2403.0, cover RB9000 at price 2469.0
+date 20150401, short RB9000 at price 2399.0
+date 20150402, PreEnterPrice 2399.0, short RB9000 at price 2376.0
+date 20150402, PreEnterPrice 2376.0, short RB9000 at price 2356.5
+date 20150407, PreEnterPrice 2356.5, short RB9000 at price 2332.0
+date 20150424, PreEnterPrice 2332.0, cover RB9000 at price 2339.0
+date 20150505,  buy RB9000 at price 2428.0
+date 20150519, PreEnterPrice 2428.0, sell RB9000 at price 2346.0
+date 20150612, short RB9000 at price 2308.0
+date 20150615, PreEnterPrice 2308.0, short RB9000 at price 2293.5
+date 20150616, PreEnterPrice 2293.5, short RB9000 at price 2278.5
+date 20150616, PreEnterPrice 2278.5, short RB9000 at price 2263.0
+date 20150721, PreEnterPrice 2263.0, cover RB9000 at price 2105.0
+date 20150824, short RB9000 at price 2024.0
+date 20150825, PreEnterPrice 2024.0, short RB9000 at price 1939.0
+date 20150907, PreEnterPrice 1939.0, short RB9000 at price 1919.0
+date 20150907, PreEnterPrice 1919.0, short RB9000 at price 1901.5
+date 20150909, PreEnterPrice 1901.5, cover RB9000 at price 1971.5
+date 20150928, short RB9000 at price 1861.0
+date 20150929, PreEnterPrice 1861.0, short RB9000 at price 1845.0
+date 20150930, PreEnterPrice 1845.0, short RB9000 at price 1828.5
+date 20151019, PreEnterPrice 1828.5, short RB9000 at price 1812.0
+date 20151215, PreEnterPrice 1812.0, cover RB9000 at price 1668.0
+date 20151221,  buy RB9000 at price 1720.0
+date 20151222, PreEnterPrice 1720.0, buy RB9000 at price 1753.0
+date 20151222, PreEnterPrice 1753.0, buy RB9000 at price 1767.5
+date 20151229, PreEnterPrice 1767.5, buy RB9000 at price 1782.5
+date 20160113, PreEnterPrice 1782.5, sell RB9000 at price 1739.0
+date 20160122,  buy RB9000 at price 1847.0
+date 20160127, PreEnterPrice 1847.0, buy RB9000 at price 1862.5
+date 20160202, PreEnterPrice 1862.5, sell RB9000 at price 1805.0
+date 20160215,  buy RB9000 at price 1868.0
+date 20160219, PreEnterPrice 1868.0, buy RB9000 at price 1882.0
+date 20160222, PreEnterPrice 1882.0, buy RB9000 at price 1896.0
+date 20160222, PreEnterPrice 1896.0, buy RB9000 at price 1910.0
+date 20160504, PreEnterPrice 1910.0, sell RB9000 at price 2393.0
+date 20160509, short RB9000 at price 2190.0
+date 20160510, PreEnterPrice 2190.0, short RB9000 at price 2098.0
+date 20160513, PreEnterPrice 2098.0, short RB9000 at price 2051.0
+date 20160513, PreEnterPrice 2051.0, short RB9000 at price 2003.5
+date 20160606, PreEnterPrice 2003.5, cover RB9000 at price 2063.0
+date 20160613,  buy RB9000 at price 2152.0
+date 20160627, PreEnterPrice 2152.0, buy RB9000 at price 2186.0
+date 20160627, PreEnterPrice 2186.0, buy RB9000 at price 2220.0
+date 20160627, PreEnterPrice 2220.0, buy RB9000 at price 2254.0

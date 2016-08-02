@@ -4,7 +4,7 @@
 海龟交易策略测试版
 """
 
-
+import os
 from ctaBase import *
 from ctaTemplate import CtaTemplate
 import numpy as np
@@ -15,7 +15,7 @@ class TurtleDemo(CtaTemplate):
     """海龟策略Demo"""
     className = 'TurtleDemo'
     author = u'LL'
-    
+    LogFilePath = os.getcwd() + '\\log\\turtle\\'
     # 策略参数
     breakLength = 20    #20日突破入市
     exitLength = 10     #10日离市退出
@@ -49,6 +49,8 @@ class TurtleDemo(CtaTemplate):
 
     MyPosition = EMPTY_INT           #持仓方向，空仓0,多头1,空头-1
     PreEnterPrice  = EMPTY_FLOAT    #上一次开仓价格
+    CurEnterPrice = EMPTY_FLOAT     #当前开仓价格
+    CurExitPrice = EMPTY_FLOAT      #当前平仓价格
     OverCounter    = EMPTY_INT         #已加仓次数
     CurBarTrade = EMPTY_INT         #当日进行过交易标志:无交易:0,开头:1,平多:2,开空:-1,平空:-2
     TotalEquity = EMPTY_INT         #当前总资金
@@ -151,7 +153,7 @@ class TurtleDemo(CtaTemplate):
             bar.low = min(bar.low, tick.lastPrice)
             bar.close = tick.lastPrice
         
-        if self.bar and self.inited :
+        if self.bar and self.inited and self.trading:
             self.doStrategy(bar)
     #----------------------------------------------------------------------
     def onBar(self, bar):
@@ -200,7 +202,7 @@ class TurtleDemo(CtaTemplate):
     def onDayBar(self, bar):
         """收到日线Bar推送（必须由用户继承实现）"""
         """if not self.barcounter:
-            output=open('record.log','w')
+            output=open(bar.vtSymbol+'_record.log','w')
             output.close()"""
         # 只有在收到日线BAR时计算所有指标值
         self.updateDAC(bar)
@@ -211,7 +213,7 @@ class TurtleDemo(CtaTemplate):
             #为了历史数据策略测试时,一日内平仓并开反向仓位情况,再执行一遍策略
             #self.doStrategy(self,bar)
             
-        """output=open('record.log','a')
+        """output=open(bar.vtSymbol+'_record.log','a')
         output.write(u'date %s, 20high %s,20low %s,10high %s 10low %s,Today high %s, low %s, position %s , N %s' 
                     %(bar.date,self.EnterLong[-2],self.EnterShort[-2],self.ExitShort[-2],self.ExitLong[-2],
                       bar.high,bar.low,self.MyPosition,self.N)+'\n')
@@ -269,66 +271,76 @@ class TurtleDemo(CtaTemplate):
         #已持有多头仓位时 
         if self.MyPosition>0:
             #当最新K线高点高于上一买入价格以上0.5倍N值，并且加仓次数小于最大允许开仓次数时
-            while bar.high>=(self.PreEnterPrice+0.5*self.N) and self.OverCounter<self.MaxOverWeight:
+            while bar.high>=self.CurEnterPrice and self.OverCounter<self.MaxOverWeight:
                 pass
                 #如开盘价格跳空高于上一买入价格以上0.5倍N值价格，则以开盘价格买入
-                self.buy(max(bar.open,self.PreEnterPrice+0.5*self.N),1)
+                self.CurEnterPrice=max(bar.open,self.PreEnterPrice+0.5*self.N)
+                self.buy(self.CurEnterPrice,1)
                 #日志输出
-                output=open('record.log','a')
-                output.write(u'date %s, PreEnterPrice %s, buy price %s' 
-                    %(bar.date, self.PreEnterPrice,max(bar.open,self.PreEnterPrice+0.5*self.N))+'\n')
+                output=open(self.LogFilePath+bar.vtSymbol+'_record.log','a')
+                output.write(u'date %s, PreEnterPrice %s, buy %s at price %s' 
+                    %(bar.date, self.PreEnterPrice,bar.vtSymbol, self.CurEnterPrice)+'\n')
                 output.close()                    
                 #更新开仓次数计数器
                 self.OverCounter=self.OverCounter+1
                 #更新记录开仓价格
-                self.PreEnterPrice=max(bar.open,self.PreEnterPrice+0.5*self.N)
+                self.PreEnterPrice=self.CurEnterPrice
+                #更新加仓价格
+                self.CurEnterPrice=self.PreEnterPrice+0.5*self.N
+                #更新平仓价格
+                self.CurExitPrice=self.PreEnterPrice-2*self.N
                 #重置当日交易状态
                 self.CurBarTrade=1
             #如果最新K线低点，低于止损价格（止损价格为2N止损和10日低点中价格更高的那个）
-            if bar.low<=max(self.ExitLong[-2],self.PreEnterPrice-2*self.N) \
+            if bar.low<=max(self.ExitLong[-2],self.CurExitPrice) \
                 and not self.CurBarTrade:
                 #卖平所有持仓
-                self.sell(min(bar.open,max(self.ExitLong[-2],self.PreEnterPrice-1*self.N)),1*self.OverCounter)
+                self.sell(min(bar.open,max(self.ExitLong[-2],self.CurExitPrice)),1*self.OverCounter)
                 #初始化持仓状态和开仓次数
                 self.OverCounter=0
                 self.MyPosition=0
                 #日志输出
-                output=open('record.log','a')
-                output.write(u'date %s, PreEnterPrice %s, sell price %s' 
-                    %(bar.date, self.PreEnterPrice,min(bar.open,max(self.ExitLong[-2],self.PreEnterPrice-2*self.N)))+'\n')
+                output=open(self.LogFilePath+bar.vtSymbol+'_record.log','a')
+                output.write(u'date %s, PreEnterPrice %s, sell %s at price %s' 
+                    %(bar.date, self.PreEnterPrice,bar.vtSymbol,min(bar.open,max(self.ExitLong[-2],self.CurExitPrice)))+'\n')
                 output.close()
                 #重置当日交易状态
                 self.CurBarTrade=2
         #已有空头仓位时
         if self.MyPosition<0:
             #当最新K线高点低于上一卖出价格以下0.5倍N值，并且加仓次数小于最大允许开仓次数时
-            while bar.low<=(self.PreEnterPrice-0.5*self.N) and self.OverCounter<self.MaxOverWeight:
+            while bar.low<=self.CurEnterPrice and self.OverCounter<self.MaxOverWeight:
                 pass
                 #如开盘价格跳空低于上一卖出价格以下0.5倍N值价格，则以开盘价格卖出
-                self.short(min(bar.open,self.PreEnterPrice-0.5*self.N),1)
+                self.CurEnterPrice=min(bar.open,self.CurEnterPrice)
+                self.short(self.CurEnterPrice,1)
                 #日志输出
-                output=open('record.log','a')
-                output.write(u'date %s, PreEnterPrice %s, short price %s' 
-                    %(bar.date, self.PreEnterPrice,min(bar.open,self.PreEnterPrice-0.5*self.N))+'\n')
+                output=open(self.LogFilePath+bar.vtSymbol+'_record.log','a')
+                output.write(u'date %s, PreEnterPrice %s, short %s at price %s' 
+                    %(bar.date, self.PreEnterPrice,bar.vtSymbol,self.CurEnterPrice)+'\n')
                 output.close()
                 #更新开仓次数计数器
                 self.OverCounter=self.OverCounter+1
                 #更新记录开仓价格
-                self.PreEnterPrice=min(bar.open,self.PreEnterPrice-0.5*self.N)
+                self.PreEnterPrice=self.CurEnterPrice
+                #更新加仓价格
+                self.CurEnterPrice=self.PreEnterPrice-0.5*self.N
+                #更新平仓价格
+                self.CurExitPrice=self.PreEnterPrice+2*self.N
                 #重置当日交易状态
                 self.CurBarTrade=-1
             #如果最新K线高点，高于止损价格（止损价格为2N止损和10日高点中价格更低的那个）    
-            if bar.high>=min(self.ExitShort[-2],self.PreEnterPrice+2*self.N) \
+            if bar.high>=min(self.ExitShort[-2],self.CurExitPrice) \
                 and not self.CurBarTrade:
                 #买平所有持仓
-                self.cover(max(bar.open,min(self.ExitShort[-2],self.PreEnterPrice+2*self.N)),1*self.OverCounter)
+                self.cover(max(bar.open,min(self.ExitShort[-2],self.CurExitPrice)),1*self.OverCounter)
                 #初始化持仓状态和开仓次数
                 self.OverCounter=0
                 self.MyPosition=0
                 #日志输出
-                output=open('record.log','a')
-                output.write(u'date %s, PreEnterPrice %s, cover price %s' 
-                    %(bar.date, self.PreEnterPrice,max(bar.open,min(self.ExitShort[-2],self.PreEnterPrice+2*self.N)))+'\n')
+                output=open(self.LogFilePath+bar.vtSymbol+'_record.log','a')
+                output.write(u'date %s, PreEnterPrice %s, cover %s at price %s' 
+                    %(bar.date, self.PreEnterPrice,bar.vtSymbol,max(bar.open,min(self.ExitShort[-2],self.CurExitPrice)))+'\n')
                 output.close()
                 #重置当日交易状态
                 self.CurBarTrade=-2
@@ -337,16 +349,21 @@ class TurtleDemo(CtaTemplate):
             #最新K线高点超过上一日多头突破价格时开仓
             if bar.high>=self.EnterLong[-2] and self.CurBarTrade!=2:
                 #如开盘价格跳空高于多头突破价格，则以开盘价格买入
-                self.buy(max(bar.open,self.EnterLong[-2]),1)
+                self.CurEnterPrice=max(bar.open,self.EnterLong[-2])
+                self.buy(self.CurEnterPrice,1)
                 #日志输出
-                output=open('record.log','a')
-                output.write(u'date %s, PreEnterPrice %s, buy price %s' 
-                    %(bar.date, self.PreEnterPrice,(max(bar.open,self.EnterLong[-2]),1))+'\n')
+                output=open(self.LogFilePath+bar.vtSymbol+'_record.log','a')
+                output.write(u'date %s,  buy %s at price %s' 
+                    %(bar.date, bar.vtSymbol,self.CurEnterPrice)+'\n')
                 output.close()
                 #更新开仓次数计数器
                 self.OverCounter=self.OverCounter+1
                 #记录开仓价格
-                self.PreEnterPrice=max(bar.open,self.EnterLong[-2])
+                self.PreEnterPrice=self.CurEnterPrice
+                #更新加仓价格
+                self.CurEnterPrice=self.PreEnterPrice+0.5*self.N
+                #更新平仓价格
+                self.CurExitPrice=self.PreEnterPrice-2*self.N
                 #设置为持有多头仓位
                 self.MyPosition=1
                 #重置当日交易状态
@@ -354,16 +371,21 @@ class TurtleDemo(CtaTemplate):
             #最新K线低点低于上一日空头突破价格
             if bar.low<=self.EnterShort[-2] and self.CurBarTrade!=-2:
                 #如果开盘价格跳空低开，低于空头突破价格，则以开盘价格卖出
-                self.short(min(bar.open,self.EnterShort[-2]),1)
+                self.CurEnterPrice=min(bar.open,self.EnterShort[-2])
+                self.short(self.CurEnterPrice,1)
                 #日志输出
-                output=open('record.log','a')
-                output.write(u'date %s, short price %s' 
-                    %(bar.date,min(bar.open,self.EnterShort[-2]))+'\n')
+                output=open(self.LogFilePath+bar.vtSymbol+'_record.log','a')
+                output.write(u'date %s, short %s at price %s' 
+                    %(bar.date,bar.vtSymbol,self.CurEnterPrice)+'\n')
                 output.close()
                 #更新开仓次数计数器
                 self.OverCounter=self.OverCounter+1
                 #记录开仓价格
-                self.PreEnterPrice=min(bar.open,self.EnterShort[-2])
+                self.PreEnterPrice=self.CurEnterPrice
+                #更新加仓价格
+                self.CurEnterPrice=(self.PreEnterPrice-0.5*self.N)
+                #更新平仓价格
+                self.CurExitPrice=self.PreEnterPrice+2*self.N
                 #设置为持有空头仓位
                 self.MyPosition = -1
                 #重置当日交易状态

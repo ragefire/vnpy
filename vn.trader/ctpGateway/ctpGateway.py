@@ -7,7 +7,7 @@ vn.ctp的gateway接入
 vtSymbol直接使用symbol
 '''
 
-
+import time
 import os
 import json
 from copy import copy
@@ -59,6 +59,12 @@ posiDirectionMap[DIRECTION_LONG] = defineDict["THOST_FTDC_PD_Long"]
 posiDirectionMap[DIRECTION_SHORT] = defineDict["THOST_FTDC_PD_Short"]
 posiDirectionMapReverse = {v:k for k,v in posiDirectionMap.items()}
 
+#交易时间
+########################################################################
+CTP_TRADE_DAY_BEGIN=830
+CTP_TRADE_DAY_END=1530
+CTP_TRADE_NIGHT_BEGIN=2030
+CTP_TRADE_NIGHT_END=300 
 
 ########################################################################
 class CtpGateway(VtGateway):
@@ -76,6 +82,7 @@ class CtpGateway(VtGateway):
         self.tdConnected = False        # 交易API连接状态
         
         self.qryEnabled = False         # 是否要启动循环查询
+        self.autoReconnectEnabled = False #交易自动登陆注册状态
         
     #----------------------------------------------------------------------
     def connect(self):
@@ -112,9 +119,24 @@ class CtpGateway(VtGateway):
         self.mdApi.connect(userID, password, brokerID, mdAddress)
         self.tdApi.connect(userID, password, brokerID, tdAddress)
         
+        #设置交易自动登陆注册定时事件
+        if not self.autoReconnectEnabled:
+            self.eventEngine.register(EVENT_TIMER, self.autoReconnect)
+            self.autoReconnectEnabled = True
+
         # 初始化并启动查询
         self.initQuery()
-    
+
+    #----------------------------------------------------------------------
+    def autoReconnect(self,event):
+        """交易登陆自动重连"""
+        curTime=int(time.strftime("%H%M"))
+
+        if (not self.tdApi.loginStatus) and curTime%10==0:
+            if ((curTime > CTP_TRADE_DAY_BEGIN  and curTime<CTP_TRADE_DAY_END) 
+            or (curTime > CTP_TRADE_NIGHT_BEGIN or curTime <CTP_TRADE_NIGHT_END)):
+                self.connect()
+
     #----------------------------------------------------------------------
     def subscribe(self, subscribeReq):
         """订阅行情"""
