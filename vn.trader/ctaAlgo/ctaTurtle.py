@@ -27,6 +27,7 @@ class TurtleDemo(CtaTemplate):
     holdDays = 30   #用于计算保留的最大K线数量
     # 策略变量
     bar = None
+    dayBar= None
     barMinute = EMPTY_STRING
     barDate = EMPTY_STRING
 
@@ -97,8 +98,8 @@ class TurtleDemo(CtaTemplate):
         self.writeCtaLog(u'海龟演示策略初始化')
         
         initData = self.loadDayBar(self.initDays)
-        for bar in initData:
-            self.onDayBar(bar)
+        for dayBar in initData:
+            self.onDayBar(dayBar)
         self.inited = True
 
         self.putEvent()
@@ -152,9 +153,44 @@ class TurtleDemo(CtaTemplate):
             bar.high = max(bar.high, tick.lastPrice)
             bar.low = min(bar.low, tick.lastPrice)
             bar.close = tick.lastPrice
-        
-        if self.bar and self.inited and self.trading:
-            self.doStrategy(bar)
+            
+        if tick.date != self.barDate or not self.dayBar:  
+
+            dayBar = CtaBarData()              
+            dayBar.vtSymbol = tick.vtSymbol
+            dayBar.symbol = tick.symbol
+            dayBar.exchange = tick.exchange
+            
+            dayBar.open = tick.openPrice
+            dayBar.high = tick.highPrice
+            dayBar.low = tick.lowPrice
+            dayBar.close = tick.lastPrice
+            
+            dayBar.date = tick.date
+            dayBar.time = tick.time
+            dayBar.datetime = tick.datetime    # K线的时间设为第一个Tick的时间
+            
+            # 实盘中用不到的数据可以选择不算，从而加快速度
+            dayBar.volume = tick.volume
+            dayBar.openInterest = tick.openInterest
+            
+            self.dayBar = dayBar                  # 这种写法为了减少一层访问，加快速度
+            self.barDate = tick.date     # 更新当前的分钟
+            #计算日k线指标
+            if self.dayBar and self.trading:
+                self.onDayBar(self.dayBar)
+                
+        else:                               # 否则继续累加新的K线
+            dayBar = self.dayBar                  # 写法同样为了加快速度
+            
+            dayBar.high = tick.highPrice
+            dayBar.low = tick.lowPrice
+            dayBar.close = tick.lastPrice
+            dayBar.volume = tick.volume
+            dayBar.openInterest = tick.openInterest
+            
+        if self.dayBar and self.inited and self.trading:
+            self.doStrategy(dayBar)
     #----------------------------------------------------------------------
     def onBar(self, bar):
         """收到Bar推送（必须由用户继承实现）"""
@@ -208,7 +244,7 @@ class TurtleDemo(CtaTemplate):
         self.updateDAC(bar)
                 
         #只有K线数达到初始数量以上之后，才开始策略计算
-        if self.barcounter>self.breakLength:
+        if self.barcounter>self.breakLength and not self.trading:
             self.doStrategy(bar)
             #为了历史数据策略测试时,一日内平仓并开反向仓位情况,再执行一遍策略
             #self.doStrategy(self,bar)

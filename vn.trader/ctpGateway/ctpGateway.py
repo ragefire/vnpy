@@ -59,12 +59,12 @@ posiDirectionMap[DIRECTION_LONG] = defineDict["THOST_FTDC_PD_Long"]
 posiDirectionMap[DIRECTION_SHORT] = defineDict["THOST_FTDC_PD_Short"]
 posiDirectionMapReverse = {v:k for k,v in posiDirectionMap.items()}
 
-#交易时间
+#交易时间,用于自动重连，比正常交易时间早30分钟
 ########################################################################
 CTP_TRADE_DAY_BEGIN=830
-CTP_TRADE_DAY_END=1530
+CTP_TRADE_DAY_END=1500
 CTP_TRADE_NIGHT_BEGIN=2030
-CTP_TRADE_NIGHT_END=300 
+CTP_TRADE_NIGHT_END=230 
 
 ########################################################################
 class CtpGateway(VtGateway):

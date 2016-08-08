@@ -35,10 +35,10 @@ MINUTE_DB_NAME = 'VnTrader_1Min_Db'
 
 #交易时间
 ########################################################################
-CTP_TRADE_DAY_BEGIN=845
-CTP_TRADE_DAY_END=1520
-CTP_TRADE_NIGHT_BEGIN=2045
-CTP_TRADE_NIGHT_END=300     
+CTP_TRADE_DAY_BEGIN=900
+CTP_TRADE_DAY_END=1500
+CTP_TRADE_NIGHT_BEGIN=2100
+CTP_TRADE_NIGHT_END=230     
      
 # CTA引擎中涉及的数据类定义
 from vtConstant import EMPTY_UNICODE, EMPTY_STRING, EMPTY_FLOAT, EMPTY_INT
@@ -102,6 +102,10 @@ class CtaTickData(object):
         self.volume = EMPTY_INT                 # 最新成交量
         self.openInterest = EMPTY_INT           # 持仓量
         
+        # 常规行情
+        self.openPrice = EMPTY_FLOAT            # 今日开盘价
+        self.highPrice = EMPTY_FLOAT            # 今日最高价
+        self.lowPrice = EMPTY_FLOAT             # 今日最低价
         self.upperLimit = EMPTY_FLOAT           # 涨停价
         self.lowerLimit = EMPTY_FLOAT           # 跌停价
         

@@ -19,10 +19,10 @@ DAILY_DB_NAME = 'VnTrader_Daily_Db'
 MINUTE_DB_NAME = 'VnTrader_1Min_Db'
 #交易时间
 ########################################################################
-CTP_TRADE_DAY_BEGIN=845
-CTP_TRADE_DAY_END=1520
-CTP_TRADE_NIGHT_BEGIN=2045
-CTP_TRADE_NIGHT_END=300   
+CTP_TRADE_DAY_BEGIN=900
+CTP_TRADE_DAY_END=1500
+CTP_TRADE_NIGHT_BEGIN=2100
+CTP_TRADE_NIGHT_END=230   
 
 
 # CTA引擎中涉及的数据类定义

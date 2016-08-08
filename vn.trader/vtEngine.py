@@ -230,6 +230,14 @@ class MainEngine(object):
             collection.insert(d)
     
     #----------------------------------------------------------------------
+    def dbUpdate(self, dbName, collectionName, where,d):
+        """向MongoDB中插入数据，d是具体数据"""
+        if self.dbClient:
+            db = self.dbClient[dbName]
+            collection = db[collectionName]
+            collection.update(where,d,upsert=True)
+            
+    #----------------------------------------------------------------------
     def dbQuery(self, dbName, collectionName, d):
         """从MongoDB中读取数据，d是查询要求，返回的是数据库查询的指针"""
         if self.dbClient:

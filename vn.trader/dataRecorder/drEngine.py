@@ -102,7 +102,7 @@ class DrEngine(object):
         vtSymbol = tick.vtSymbol
         #检查tick是否在交易时间内
         min1=int(tick.time[:2]+tick.time[3:5])
-        if (min1>CTP_TRADE_DAY_BEGIN and min1<CTP_TRADE_DAY_END) or min1>CTP_TRADE_NIGHT_BEGIN or min1<CTP_TRADE_NIGHT_END :
+        if (min1>=CTP_TRADE_DAY_BEGIN and min1<=CTP_TRADE_DAY_END) or min1>=CTP_TRADE_NIGHT_BEGIN or min1<=CTP_TRADE_NIGHT_END :
             #忽略交易量为0的无效数据
             if tick.volume>0 and tick.date!='' and tick.date!=None:
                 #收到TICK时，注册日结事件，启用日结状态
@@ -122,7 +122,22 @@ class DrEngine(object):
                     self.insertData(TICK_DB_NAME, vtSymbol, drTick)
                     
                     #将最新TICK更新入全局字典，用于日结更新日线数据
-                    self.tickDict[vtSymbol]=drtick
+                    #self.tickDict[vtSymbol]=drtick
+                    dayBar = self.dayBarDict[vtSymbol]
+                    dayBar.vtSymbol = drTick.vtSymbol
+                    dayBar.symbol = drTick.symbol
+                    dayBar.exchange = drTick.exchange
+                    
+                    dayBar.open = drTick.openPrice
+                    dayBar.high = drTick.highPrice
+                    dayBar.low = drTick.lowPrice
+                    dayBar.close = drTick.lastPrice
+                    
+                    dayBar.date = drTick.date
+                    dayBar.time = drTick.time
+                    dayBar.datetime = drTick.datetime
+                    dayBar.volume = drTick.volume
+                    dayBar.openInterest = drTick.openInterest
                     
                     if vtSymbol in self.activeSymbolDict:
                         activeSymbol = self.activeSymbolDict[vtSymbol]
@@ -173,7 +188,7 @@ class DrEngine(object):
     def dayEnd(self,event):
         """日结任务"""
         curTime=int(datetime.now().strftime("%H%M"))
-        if  curTime>1600 and curTime < 1700 and self.dayEndEnabled:
+        if  curTime>1600 and curTime < 1700 and curTime%10==0 and self.dayEndEnabled:
         
             for vtSymbol in self.tickDict:
                 ctick = DrTickData()
@@ -200,6 +215,13 @@ class DrEngine(object):
             self.dayEndQueue.append(dayBar.date)
             self.dayEndEnabled = False
             self.eventEngine.unregister(EVENT_TIMER,self.dayEnd)
+            self.updateSymbol()
+    #----------------------------------------------------------------------
+    def updateSymbol(self):
+        """主引擎全部合约更新写入数据库"""        
+        for contract in self.mainEngine.getAllContracts():
+            where = {'symbol': contract.symbol}
+            self.updateData(SETTING_DB_NAME, 'FuturesSymbol',where, contract)
     #----------------------------------------------------------------------
     def registerEvent(self):
         """注册事件监听"""
@@ -210,7 +232,12 @@ class DrEngine(object):
     def insertData(self, dbName, collectionName, data):
         """插入数据到数据库（这里的data可以是CtaTickData或者CtaBarData）"""
         self.mainEngine.dbInsert(dbName, collectionName, data.__dict__)
-        
+    
+    #----------------------------------------------------------------------
+    def updateData(self, dbName, collectionName, where,data):
+        """保存到数据库（这里的data可以是CtaTickData或者CtaBarData）"""
+        self.mainEngine.dbUpdate(dbName, collectionName, where,data.__dict__)
+
     #----------------------------------------------------------------------
     def writeDrLog(self, content):
         """快速发出日志事件"""

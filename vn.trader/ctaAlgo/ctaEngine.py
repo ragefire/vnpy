@@ -237,7 +237,7 @@ class CtaEngine(object):
         tick = event.dict_['data']
         #检查tick是否在交易时间内
         min1=int(tick.time[:2]+tick.time[3:5])
-        if (min1>CTP_TRADE_DAY_BEGIN and min1<CTP_TRADE_DAY_END) or min1>CTP_TRADE_NIGHT_BEGIN or min1<CTP_TRADE_NIGHT_END :
+        if (min1>=CTP_TRADE_DAY_BEGIN and min1<=CTP_TRADE_DAY_END) or min1>=CTP_TRADE_NIGHT_BEGIN or min1<=CTP_TRADE_NIGHT_END :
             #忽略交易量为0的无效数据
             if tick.volume>0 and tick.date!='' and tick.date!=None:
                 # 收到tick行情后，先处理本地停止单（检查是否要立即发出）
