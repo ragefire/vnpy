@@ -81,7 +81,7 @@ class CtaEngine(object):
         req = VtOrderReq()
         req.symbol = contract.symbol
         req.exchange = contract.exchange
-        req.price = price
+        req.price =  round(price/contract.priceTick)*contract.priceTick
         req.volume = volume
         
         req.productClass = strategy.productClass
@@ -173,7 +173,7 @@ class CtaEngine(object):
         so = StopOrder()
         so.vtSymbol = vtSymbol
         so.orderType = orderType
-        so.price = price
+        so.price =  round(price/contract.priceTick)*contract.priceTick
         so.volume = volume
         so.strategy = strategy
         so.stopOrderID = stopOrderID

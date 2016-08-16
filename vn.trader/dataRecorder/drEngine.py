@@ -104,7 +104,7 @@ class DrEngine(object):
         min1=int(tick.time[:2]+tick.time[3:5])
         if (min1>=CTP_TRADE_DAY_BEGIN and min1<=CTP_TRADE_DAY_END) or min1>=CTP_TRADE_NIGHT_BEGIN or min1<=CTP_TRADE_NIGHT_END :
             #忽略交易量为0的无效数据
-            if tick.volume>0 and tick.date!='' and tick.date!=None:
+            if tick.volume>0 and tick.date!='' and tick.date!=None :
                 #收到TICK时，注册日结事件，启用日结状态
                 if not self.dayEndEnabled :
                     self.eventEngine.register(EVENT_TIMER,self.dayEnd)
@@ -122,7 +122,6 @@ class DrEngine(object):
                     self.insertData(TICK_DB_NAME, vtSymbol, drTick)
                     
                     #将最新TICK更新入全局字典，用于日结更新日线数据
-                    #self.tickDict[vtSymbol]=drtick
                     dayBar = self.dayBarDict[vtSymbol]
                     dayBar.vtSymbol = drTick.vtSymbol
                     dayBar.symbol = drTick.symbol
@@ -135,7 +134,7 @@ class DrEngine(object):
                     
                     dayBar.date = drTick.date
                     dayBar.time = drTick.time
-                    dayBar.datetime = drTick.datetime
+                    
                     dayBar.volume = drTick.volume
                     dayBar.openInterest = drTick.openInterest
                     
@@ -188,30 +187,15 @@ class DrEngine(object):
     def dayEnd(self,event):
         """日结任务"""
         curTime=int(datetime.now().strftime("%H%M"))
-        if  curTime>1600 and curTime < 1700 and curTime%10==0 and self.dayEndEnabled:
+        if  curTime>1500 and curTime < 1600 and curTime%10==0 and self.dayEndEnabled:
         
             for vtSymbol in self.tickDict:
-                ctick = DrTickData()
-                dayBar = DrBarData()
-                ctick = self.tickDict[vtSymbol]
                 dayBar = self.dayBarDict[vtSymbol]
-                dayBar.vtSymbol = ctick.vtSymbol        # vt系统代码
-                dayBar.symbol = ctick.symbol          # 代码
-                dayBar.exchange = ctick.exchange        # 交易所
-            
-                dayBar.open = ctick.openPrice             # OHLC
-                dayBar.high = ctick.highPrice
-                dayBar.low = ctick.lowPrice
-                dayBar.close = ctick.lastPrice
-                
-                dayBar.date = ctick.date            # 日期
-                dayBar.time = EMPTY_STRING            # 时间
-                dayBar.datetime = datetime.strptime(ctick.date, '%Y%m%d')  # python的datetime时间对象
-                
-                dayBar.volume = ctick.volume             # 成交量
-                dayBar.openInterest = ctick.openInterest      # 持仓量
+                if dayBar.volume>0  :                
+                    dayBar.datetime = datetime.strptime(' '.join([dayBar.date, '00:00:00.0']), '%Y%m%d %H:%M:%S.%f')  # python的datetime时间对象
+                    
+                    self.insertData(DAILY_DB_NAME, vtSymbol, dayBar)
 
-                self.insertData(DAILY_DB_NAME, vtSymbol, dayBar)
             self.dayEndQueue.append(dayBar.date)
             self.dayEndEnabled = False
             self.eventEngine.unregister(EVENT_TIMER,self.dayEnd)

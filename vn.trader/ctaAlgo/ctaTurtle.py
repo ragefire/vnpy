@@ -288,10 +288,10 @@ class TurtleDemo(CtaTemplate):
                                 'close':np.array(self.CloseHistory,dtype=np.float64),
                                 'volume':np.array(self.VolHistory)
                                 }
-            #if self.barcounter>self.breakLength:                    
-            #更新ATR            
-            self.MyATR=ta.ATR(self.HistoryBar['high'],self.HistoryBar['low'],
-                              self.HistoryBar['close'],timeperiod=self.atrLength)
+            if self.barcounter>self.breakLength:                    
+                #更新ATR   
+                Trange=  ta.TRANGE(self.HistoryBar['high'],self.HistoryBar['low'], self.HistoryBar['close'] )      
+                self.MyATR=ta.MA(Trange,timeperiod=self.atrLength)
             if self.MyATR.size>5:
                 #更新N值
                 self.N=round(self.MyATR[-2])

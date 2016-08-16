@@ -365,37 +365,4 @@ class DataEngine(object):
         self.eventEngine.register(EVENT_ORDER, self.updateOrder)
         
 
-class Scheduler(object):
-    '''
-        仅被SaveAgent使用
-        定时驱动
-        使用sched实现
-        目前已经转为使用MacroCommandQueue
-    '''
-    def __init__(self,tpoint,target,tround=24*60*60):
-        '''
-            tpoint为HHMMSS,其中hour为24小时计时
-            tround为第一次触发后,后续触发的时间间隔
-        '''
-        self._tpoint = tpoint
-        self._target = target
-        self._tround = tround
-        self._scheduler = sched.scheduler(time.time,time.sleep)
-        self._thread = threading.Thread(target=self._start,daemon=True)
-        self._thread.start()
-
-    def _start(self):
-        print('scheduler starting...')
-        seconds = now2next(self._tpoint//10000,self._tpoint%10000//100,self._tpoint%100)
-        logging.info('start time trigger %s' % (seconds,))
-        print(seconds)
-        self._scheduler.enter(seconds,1,self._func)
-        self._scheduler.run()
-
-    def _func(self):
-        logging.info('in time trigger....')
-        self._scheduler.enter(self._tround,1,self._func)
-        print('next trigger:',self._tround)
-        self._target()
-        logging.info('time trigger end,next trig:%s' % (self._tround,))    
     
